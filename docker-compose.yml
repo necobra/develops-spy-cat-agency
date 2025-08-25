@@ -14,7 +14,7 @@ services:
 
   celery:
     build: .
-    command: celery -A agency_core.celery_app worker --loglevel=info
+    command: python -m celery -A agency_core.celery_app worker --loglevel=info
     volumes:
       - .:/app
     env_file:
@@ -24,7 +24,7 @@ services:
 
   celery-beat:
     build: .
-    command: celery -A agency_core.celery_app beat --loglevel=info
+    command: python -m celery -A agency_core.celery_app beat --loglevel=info
     volumes:
       - .:/app
     env_file:

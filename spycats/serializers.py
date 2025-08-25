@@ -1,15 +1,39 @@
 from rest_framework import serializers
-from .models import Bread, SpyCat, Mission, Target, CompleteChoices
+from .models import Breed, SpyCat, Mission, Target, CompleteChoices
 
-class BreadSerializer(serializers.ModelSerializer):
+class BreedSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Bread
+        model = Breed
         fields = '__all__'
 
 class SpyCatSerializer(serializers.ModelSerializer):
+    breed = serializers.CharField(source='breed.name')
     class Meta:
         model = SpyCat
-        fields = '__all__'
+        fields = ['id', 'name', 'experience', 'breed', 'salary']
+
+    def create(self, validated_data):
+        breed_name = validated_data.pop('breed')['name']
+        try:
+            breed = Breed.objects.get(name=breed_name)
+        except Breed.DoesNotExist:
+            raise serializers.ValidationError({'breed': f'Breed with name "{breed_name}" does not exist.'})
+        spycat = SpyCat.objects.create(breed=breed, **validated_data)
+        return spycat
+
+    def update(self, instance, validated_data):
+        breed_data = validated_data.pop('breed', None)
+        if breed_data:
+            breed_name = breed_data['name']
+            try:
+                breed = Breed.objects.get(name=breed_name)
+            except Breed.DoesNotExist:
+                raise serializers.ValidationError({'breed': f'Breed with name "{breed_name}" does not exist.'})
+            instance.breed = breed
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
 class MissionSerializer(serializers.ModelSerializer):
     class Meta:

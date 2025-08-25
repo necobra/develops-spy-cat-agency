@@ -6,14 +6,17 @@ class CompleteChoices(models.TextChoices):
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
 
-class Bread(models.Model):
+class Breed(models.Model):
     external_id = models.CharField(max_length=64, unique=True)
     name = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
 
 class SpyCat(models.Model):
     name = models.CharField(max_length=127)
     experience = models.IntegerField()
-    bread = models.ForeignKey(Bread, on_delete=models.CASCADE, related_name='spy_cats')
+    breed = models.ForeignKey(Breed, on_delete=models.CASCADE, related_name='spy_cats')
     salary = models.IntegerField()
 
 class Mission(models.Model):

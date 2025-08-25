@@ -1,19 +1,16 @@
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import Bread, SpyCat, Mission, Target, CompleteChoices
-from .serializers import BreadSerializer, SpyCatSerializer, MissionSerializer, TargetSerializer
+from .models import Breed, SpyCat, Mission, Target, CompleteChoices
+from .serializers import BreedSerializer, SpyCatSerializer, MissionSerializer, TargetSerializer
 from django.db import transaction
 
-# Create your views here.
 
 class SpyCatViewSet(viewsets.ModelViewSet):
     queryset = SpyCat.objects.all()
     serializer_class = SpyCatSerializer
 
     def partial_update(self, request, *args, **kwargs):
-        # Only allow salary update
         kwargs['partial'] = True
         instance = self.get_object()
         if 'salary' not in request.data:
@@ -28,7 +25,6 @@ class MissionViewSet(viewsets.ModelViewSet):
     serializer_class = MissionSerializer
 
     def create(self, request, *args, **kwargs):
-        # Accept nested targets
         with transaction.atomic():
             targets_data = request.data.pop('targets', [])
             serializer = self.get_serializer(data=request.data)
@@ -69,6 +65,6 @@ class TargetViewSet(viewsets.ModelViewSet):
                 return Response({'detail': 'Notes cannot be updated for a completed mission.'}, status=status.HTTP_400_BAD_REQUEST)
         return super().partial_update(request, *args, **kwargs)
 
-class BreadViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Bread.objects.all()
-    serializer_class = BreadSerializer
+class BreedViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Breed.objects.all()
+    serializer_class = BreedSerializer

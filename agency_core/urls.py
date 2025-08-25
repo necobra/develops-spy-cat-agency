@@ -17,13 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from spycats.views import SpyCatViewSet, MissionViewSet, TargetViewSet, BreadViewSet
+from spycats.views import SpyCatViewSet, MissionViewSet, TargetViewSet, BreedViewSet
 
 router = DefaultRouter()
 router.register(r'spycats', SpyCatViewSet, basename='spycat')
 router.register(r'missions', MissionViewSet, basename='mission')
 router.register(r'targets', TargetViewSet, basename='target')
-router.register(r'breads', BreadViewSet, basename='bread')
+router.register(r'breeds', BreedViewSet, basename='breed')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
