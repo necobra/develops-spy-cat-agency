@@ -10,7 +10,6 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
 
-RUN python manage.py migrate && \
-    python manage.py shell -c "from spycats.tasks import update_breads_from_api; update_breads_from_api()"
+RUN python manage.py migrate
 
 CMD ["python", "manage.py", "runserver"]
